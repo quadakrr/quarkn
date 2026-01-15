@@ -14,4 +14,4 @@ Simple Linux CLI notification tool.
 
 # Example
 ```bash
-quarkn -t 10m -m 'Take a break'
+python3 quarkn.py -t 10m -m 'Take a break'

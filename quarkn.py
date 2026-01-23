@@ -1,9 +1,9 @@
 import argparse
-import subprocess
+import shutil  # to find a player(s)
+import subprocess  # sound
+import sys  # for sys.exit(1) when there is a error
+import threading  # time countdown thread
 import time
-import threading
-import sys
-import shutil
 
 
 def timeprint(wait_time_float):  # time countdown
@@ -113,7 +113,7 @@ def main():
         "-r",
         "--remaining-time-countdown",
         action="store_true",
-        help="Output remaining time every second. ",
+        help="Output remaining time every second. Works not perfectly yet.",
     )
 
     parser.add_argument(
@@ -196,6 +196,7 @@ def main():
 
             if wait_time_str == "ex":
                 print("'1h' works, '1h 30m' not, but '1.5h' is a working example.")
+                wait_time_str = ""
 
             if wait_time_str == "":
                 while wait_time_str == "" or wait_time_str == "ex":
@@ -205,9 +206,6 @@ def main():
                         print(
                             "'1h' works, '1h 30m' not, but '1.5h' or '90m' is a working examples."
                         )
-
-        if not args.text:
-            notification_text = input("Notification text (not essential): ")
 
         if not args.cmd:
             cmd = input("Cmd to execute (not essential): ")
@@ -230,6 +228,11 @@ def main():
             else:
                 send_notification = False
 
+            if not args.text:
+                notification_text = input("Custom notification text (not essential): ")
+                if notification_text == "":  # reset to default if skipped
+                    notification_text = "You have a scheduled notification from quarkn."
+
         if not args.spam:
             spam_assinger = input(
                 "Should the program spam notifications? (it will send 50 instead of 1)[y/n]: "
@@ -251,12 +254,14 @@ def main():
         ",", "."
     )  # In some countries it's common to write "," in fractional number but doesn't work in python
 
-    value = wait_time_str.rstrip(
+    time_value = wait_time_str.rstrip(
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    )  # "value" will be a pure number from input
-    unit = wait_time_str[len(value) :]
+    )  # "time_value" will be a pure number (yes str) from input
+    unit = wait_time_str[len(time_value) :]
 
-    value = float(value)
+    time_value = float(
+        time_value
+    )  # next step converting this number * time unit word to seconds
 
     if unit in (
         "m",
@@ -270,22 +275,9 @@ def main():
         "Minute",
         "Minutes",
     ):
-        wait_time_float = value * 60
+        wait_time_float = time_value * 60
     elif unit in ("h", "hour", "hours", "hrs", "H", "Hour", "Hours", "Hrs"):
-        wait_time_float = value * 3600
-    elif unit in (
-        "ms",
-        "millisecond",
-        "milisecond",
-        "milliseconds",
-        "miliseconds",
-        "Ms",
-        "Millisecond",
-        "Milisecond",
-        "Milliseconds",
-        "Miliseconds",
-    ):
-        wait_time_float = value / 1000
+        wait_time_float = time_value * 3600
     elif unit in (
         "s",
         "seconds",
@@ -299,7 +291,7 @@ def main():
         "Second",
         "",
     ):
-        wait_time_float = value
+        wait_time_float = time_value
     else:
         print(f"Unknown time unit: {unit}")
         sys.exit(1)
@@ -342,3 +334,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

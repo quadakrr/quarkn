@@ -102,16 +102,16 @@ def play_sound(sound_path, debug):  # using external player
 
 
 def parse_time_to_seconds(time_str, TIME_PATTERN, UNIT_TO_SECONDS):
-    time_str = time_str.replace(",", ".")
+    time_str = str(time_str).replace(",", ".")
     matches = TIME_PATTERN.findall(time_str)
-
-    if not matches:
-        raise ValueError(f"Invalid time format: {time_str}")
 
     total_seconds = 0.0
 
-    for value, unit in matches:
-        total_seconds += float(value) * UNIT_TO_SECONDS[unit.lower()]
+    if matches:
+        for value, unit in matches:
+            total_seconds += float(value) * UNIT_TO_SECONDS[unit.lower()]
+    else:
+        total_seconds = float(time_str) # str with numbers but without words is in seconds by default
 
     return total_seconds
 

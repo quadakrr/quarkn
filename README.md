@@ -50,6 +50,11 @@ Download install.sh, then:
 ```bash
 cd ~/Downloads/ ; chmod +x install.sh ; sudo ./install.sh
 ```
+
+Or just with one command:
+```bash
+curl -fsSL https://raw.githubusercontent.com/quadakr/quarkn/main/install.sh | sudo bash
+```
 ---
 
 ## Example

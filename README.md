@@ -26,7 +26,7 @@ The interface and internal behavior may change as the project evolves.
 - Interactive mode
 - Optional sound playback
 - Command execution after timer
-- Fractional time support (e.g. `1.5h`, `2,5m`)
+- Fractional time support (e.g. `1.5h`, `2,5m`, `2 hours 26 minutes`)
 - No background services or daemons required
 
 ---
@@ -43,7 +43,17 @@ The interface and internal behavior may change as the project evolves.
 
 ---
 
+## Installing
+
+Download install.sh, then:
+
+```bash
+cd ~/Downloads/ ; chmod +x install.sh ; sudo ./install.sh
+```
+---
+
 ## Example
 
 ```bash
-python3 quarkn.py -t 10mins -m "Take a break"
+quarkn -t 10mins -m "Take a break"
+```
